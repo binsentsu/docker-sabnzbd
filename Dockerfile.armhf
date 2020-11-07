@@ -10,7 +10,9 @@ LABEL maintainer="thelamer"
 # environment settings
 ARG DEBIAN_FRONTEND="noninteractive"
 ENV HOME="/config" \
-PYTHONIOENCODING=utf-8
+PYTHONIOENCODING=utf-8 \
+OPENVPN_CONFIG_DIR="/etc/openvpn/custom" \
+OPENVPN_CONFIG="default.ovpn"
 
 RUN \
  echo "***** install gnupg ****" && \
@@ -34,6 +36,7 @@ RUN \
 	python3-cryptography \
 	python3-distutils \
 	python3-pip \
+	openvpn \
 	unrar && \
  if [ -z ${SABNZBD_VERSION+x} ]; then \
 	SABNZBD_VERSION=$(curl -s https://api.github.com/repos/sabnzbd/sabnzbd/releases/latest \
@@ -69,6 +72,9 @@ RUN \
 
 # add local files
 COPY root/ /
+
+ADD scripts/ /scripts/
+RUN chmod +x /scripts/*.sh
 
 # ports and volumes
 EXPOSE 8080 9090
