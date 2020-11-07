@@ -1,0 +1,21 @@
+---
+version: "2.1"
+services:
+  sabnzbd:
+    privileged: true
+    image: sabnzbd:latest
+    container_name: sabnzbd
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+      - LOCAL_NETWORK=192.168.1.0/24
+    volumes:
+      - ./config:/config
+      - ./downloads:/downloads
+      - ./incomplete:/incomplete-downloads #optional
+      - ./openvpnconf:/etc/openvpn/custom
+    ports:
+      - 8080:8080
+      - 9090:9090
+    restart: unless-stopped
